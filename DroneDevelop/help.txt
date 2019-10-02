@@ -1,0 +1,2 @@
+This is the help document with a list of commands
+exit
