@@ -1,5 +1,6 @@
 from socket import socket, AF_INET, SOCK_DGRAM
 import os.path
+import subprocess
 from os import path, system
 from time import sleep
 
@@ -80,6 +81,12 @@ def run():
     else:
         print("Error 404: File not found!")
 
+def stream():
+    streamCommand = 'python VideoStream/main.py'
+    p = subprocess.Popen(streamCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    out = p.communicate()[0]
+    print(out)    
+
 #command: new
 def new():
     userInput = input("Do you wish to create a new mission? (y/n)>")
@@ -132,5 +139,7 @@ while not exit:
         delete()
     elif userInput == "help" or userInput == "h":
         help()
+    elif userInput == "stream":
+        stream()
     else:
         print("Invalid command: Type help for list of commands")

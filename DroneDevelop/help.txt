@@ -7,3 +7,4 @@ connect: send commands directly to drone
 new: create a new mission
 edit: edit an existing mission
 delete: delete an existing mission
+stream: displays video stream directly from drone
