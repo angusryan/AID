@@ -1,0 +1,11 @@
+takeoff
+wait:1
+forward 200
+wait:3
+flip f
+wait:3
+back 200
+wait:3
+flip b
+wait:3
+land

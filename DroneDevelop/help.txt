@@ -1,0 +1,9 @@
+command: DESCRIPTION
+exit: exits program
+clear: clears program logs
+run: run mission requires filename input
+help: lists available commands
+connect: send commands directly to drone
+new: create a new mission
+edit: edit an existing mission
+delete: delete an existing mission

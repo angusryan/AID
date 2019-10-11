@@ -1,0 +1,8 @@
+takeoff
+streamon
+wait:3
+up 20
+wait:5
+cw 360
+wait:5
+land
