@@ -16,7 +16,8 @@ def setup():
     serverSocket.bind(('', 8889))
     msg = "command"
     serverSocket.sendto(msg.encode(), (droneAddress, dronePort))
-    print(serverSocket.recv(1024))
+    res = serverSocket.recv(1024)
+    print(res)
     return serverSocket
 
 #To be implemented in the future
@@ -44,7 +45,8 @@ def runMission(file, serverSocket):
             msg = line[0:-1]
             print(msg)
             serverSocket.sendto(msg.encode(), (droneAddress, dronePort))
-            print(serverSocket.recv(1024))
+            res = serverSocket.recv(1024)
+            print(res)
 
 #command handling:
 #command: connect
@@ -57,7 +59,8 @@ def connect():
             exit = True
         else:
             serverSocket.sendto(msg.encode(), (droneAddress, dronePort))
-            print(serverSocket.recv(1024))
+            res = serverSocket.recv(1024)
+            print(res)
 
 #command: run
 def run():
