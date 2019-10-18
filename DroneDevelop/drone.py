@@ -3,18 +3,35 @@ import os.path
 import subprocess
 from os import path, system
 from time import sleep
+from threading import Thread, Event
 
 #GLOBAL VARIABLES#
 droneAddress = "192.168.10.1"
 dronePort = 8889
+streamCommand = 'python VideoStream/main.py'
 
+class InterruptibleThread(Thread):
+    def __init__(self, target):
+        super().__init__()
+        self.target = target
+        self.process = None
+        self._stopevent = Event()
+        self._periodicity = 1.0
+    def run(self):
+        self.process = subprocess.Popen(self.target, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while not self._stopevent.is_set():
+            self._stopevent.wait(self._periodicity)
+    def stop(self):
+        self._stopevent.set()
+        self.process.terminate()
+        Thread.join(self)
 
 #FUNCTIONS#
 #Used in multiple other functions
 #setup function
 def setup():
     serverSocket = socket(AF_INET, SOCK_DGRAM)
-    serverSocket.bind(('', 8889))
+    serverSocket.bind(('', 8888))
     msg = "command"
     serverSocket.sendto(msg.encode(), (droneAddress, dronePort))
     res = serverSocket.recv(1024)
@@ -80,13 +97,14 @@ def run():
 
     else:
         print("Error 404: File not found!")
-
+'''
 def stream():
+
     streamCommand = 'python VideoStream/main.py'
     p = subprocess.Popen(streamCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     out = p.communicate()[0]
     print(out)    
-
+'''
 #command: new
 def new():
     userInput = input("Do you wish to create a new mission? (y/n)>")
@@ -120,6 +138,8 @@ def help():
 
 #main loop
 exit = False
+streaming = False
+t = InterruptibleThread(streamCommand)
 while not exit:
     userInput = input("Command: ")
 
@@ -140,6 +160,13 @@ while not exit:
     elif userInput == "help" or userInput == "h":
         help()
     elif userInput == "stream":
-        stream()
+        if not streaming:
+            t.start()
+            streaming = True
+        elif streaming:
+            t.stop()
+            streaming = False
+        else:
+            print("Error: Something went wrong")
     else:
         print("Invalid command: Type help for list of commands")
